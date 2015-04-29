@@ -279,25 +279,46 @@ textarea {
 }
 
 
-body {
+html, body {
+    height: 100%;
+    width: 100%;
     overflow: hidden;
     background-color: #332532;
+    text-align: center;
 }
 
-@media screen and (min-aspect-ratio: 1/1) {
-    canvas {
-    display: block;
-    height: 80%;
-    width: auto;
-    margin: 0 auto;
-    border: 2px solid #644D52;
-}
+canvas {
+        display: block;
+        position: absolute;
+        height: 90%;
+        width: auto;
+        margin: auto;
+        top:0;
+        bottom: 0;
+        left:0;
+        right:0;
+        border: 2px solid #644D52;
+    }
+
 
 @media screen and (max-aspect-ratio: 1/1) {
     canvas {
-    display: block;
-    height: auto;
-    width: 80%;
-    margin: 0 auto;
-    border: 2px solid #644D52;
+        height: auto;
+    }
+}
+
+#canvas-0 {
+    background-color: #efe7be;
+}
+
+#canvas-1 {
+    background-image: url('../img/corpse.png');
+}
+
+#canvas-2 {
+    
+}
+
+#canvas-3 {
+    
 }
