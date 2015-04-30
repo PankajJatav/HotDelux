@@ -283,9 +283,9 @@ html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    background-color: #323748;
+    background-color: #2A2C30;
     text-align: center;
-    background-image: url('http://www.transparenttextures.com/patterns/starring.png');
+    background-image: url('http://www.transparenttextures.com/patterns/asfalt-dark.png');
 }
 
 canvas {
@@ -325,93 +325,68 @@ canvas {
     box-sizing: padding-box;
     text-align: center;
     font-family: serif;
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
+    text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
 }
 
-#controls .left, 
-#controls .right, 
-#controls .left .credit,
-#controls .left .bet-line,
-#controls .left .bet {
-    display: inline-block;
-    text-align: center;
+#controls div {
+    position: absolute;
+    color: #efe7be;
 }
 
-#controls .left .credit,
-#controls .left .bet-line,
-#controls .left .bet {
-    text-align: center;
-    width: 30%;
-    max-width: 30%;
+#controls div.button {
+    cursor: pointer;
 }
 
-#controls .left .bet-line > div + div > div  {
-    display: inline-block;
+#credit {
+    top: 47%;
+    left: 5%;
+    width: 16%;
+    height: 39%;
 }
 
-#controls .bottom {
-    width: 98%;
-    height: 85%;
+#bet-decrease {
+    top: 50%;
+    height: 35%;
+    left: 22%;
+    width: 7%;
 }
 
-#controls .bottom,
-#controls .left,
-#controls .right  {
-    white-space: nowrap;
-    overflow: hidden;
-    margin: 1%;
+#bet-per-line {
+    top: 47%;
+    width: 10%;
+    left: 30%;
 }
 
-#controls .left > div {
-    vertical-align: top;
+#bet-increase {
+    top: 48%;
+    left: 40%;
+    width: 7%;
+    height: 43%;
 }
 
-#controls .left {
-    font-size: 0.8em;
-    color: #fff;
-    width: 50%;
-    max-width: 50%;
+#bet {
+    top: 46%;
+    left: 49%;
+    width: 13%;
 }
 
-#controls .left .bet-line {
-    width:  38%;
-    max-width: 38%;
+#autoplay {
+    width: 31%;
+    top: 22%;
+    right: 4%;
+    height: 27%;
 }
 
-#controls .left .button {
-    padding: 0.2em 0.6em;
+#start {
+    top: 55%;
+    right: 4%;
+    width: 14%;
+    height: 33%;
 }
 
-#controls .right > div {
-    width: 100%;
+#playtable {
+    top: 57%;
+    right: 19%;
+    width: 16%;
+    height: 27%;
 }
-
-
-#controls .right > div > div.button {
-    display: inline-block;
-}
-
-#controls .button {
-    -moz-box-shadow: 5px 5px 0px 0px #061402;
-    -webkit-box-shadow: 5px 5px 0px 0px #061402;
-    box-shadow: 5px 5px 0px 0px #061402;
-    background-color:#FF8C00;
-    display:inline-block;
-    cursor:pointer;
-    color:#ffffff;
-    font-family:serif;
-    font-size:0.5em;
-    font-weight:bold;
-    padding:0.2em 2em;
-    text-decoration:none;
-    text-shadow:0px 1px 0px #2f6627;
-    -webkit-box-sizing: padding-box;
-    -moz-box-sizing: padding-box; 
-    box-sizing: padding-box;
-    display: block;
-}
-
-#controls .button:hover {
-    background-color:#2E0927;
-}
-
