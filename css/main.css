@@ -337,6 +337,9 @@ canvas {
 #controls div {
     position: absolute;
     color: #efe7be;
+    font-family: monospace;
+    font-size: 0.7em;
+    line-height: 2;
 }
 
 #controls div.button {
