@@ -286,6 +286,12 @@ html, body {
     background-color: #2A2C30;
     text-align: center;
     background-image: url('http://www.transparenttextures.com/patterns/asfalt-dark.png');
+     -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 canvas {
@@ -353,8 +359,8 @@ canvas {
 
 #bet-per-line {
     top: 47%;
-    width: 10%;
-    left: 30%;
+    width: 11%;
+    left: 29%;
 }
 
 #bet-increase {
