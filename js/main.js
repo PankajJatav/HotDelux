@@ -1,6 +1,6 @@
 window.onload = function(){
 	var consts = {
-		reelLength: 70,
+		reelLength: 60,
 		itemWidth: 250,
 	};
 
@@ -27,7 +27,7 @@ window.onload = function(){
 	controls.i.start.onclick = function(){
 		if (game.active === true && game.credit.val > 0){
 			var bet = game.bet.val();
-			game.credit.chahge(- bet);
+			game.credit.change(- bet);
 			reels.compose();
 			reels.revolve();
 		}	
@@ -53,7 +53,7 @@ window.onload = function(){
 			refresh: function(){
 				controls.o.credit.innerHTML = game.credit.val;
 			},
-			chahge: function(d){
+			change: function(d){
 				game.credit.val+=d;	
 			}
 		},
@@ -149,6 +149,12 @@ window.onload = function(){
 		layer1: document.getElementById('canvas-0').getContext('2d'),
 		layer2: document.getElementById('canvas-1').getContext('2d')
 	};
+	view.layer2.shadowColor = '#000';
+    view.layer2.shadowBlur = 0;
+    view.layer2.shadowOffsetX = 0;
+    view.layer2.shadowOffsetY = 4;
+    view.layer2.strokeStyle = '#04756f';
+
 	items = {
 		list: ['lemons','cherries','oranges','plums','bars','stars','sevens'],
 		cost: {
@@ -178,16 +184,31 @@ window.onload = function(){
 	reels = {
 		blur: 0,
 		lines: {
+			interval: '',
 			matched: false,
 			check: function(){
 				matched = [];
 				var actual = reels.getActual();
-				console.log((actual[0][2] == actual[1][1] && actual[0][2] === actual[2][0]));
-				if (actual[0][0] === actual[1][0] && actual[0][0] === actual[2][0]){matched.push(5)}
-				if (actual[0][0] === actual[1][1] && actual[0][0] === actual[2][2]){matched.push(4)}
-				if (actual[0][1] === actual[1][1] && actual[0][1] === actual[2][1]){matched.push(3)}
-				if (actual[0][2] === actual[1][1] && actual[0][2] === actual[2][0]){matched.push(2)}
-				if (actual[0][2] === actual[1][2] && actual[0][2] === actual[2][2]){matched.push(1)};	
+				if (actual[0][0] === actual[1][0] && actual[0][0] === actual[2][0]){
+					matched.push(5);
+					game.credit.change(bet * items.cost[items.list[actual[0][0]]]);
+				}
+				if (actual[0][0] === actual[1][1] && actual[0][0] === actual[2][2]){
+					matched.push(4);
+					game.credit.change(bet * items.cost[items.list[actual[0][0]]]);
+				}
+				if (actual[0][1] === actual[1][1] && actual[0][1] === actual[2][1]){
+					matched.push(3);
+					game.credit.change(bet * items.cost[items.list[actual[0][1]]]);
+				}
+				if (actual[0][2] === actual[1][1] && actual[0][2] === actual[2][0]){
+					matched.push(2);
+					game.credit.change(bet * items.cost[items.list[actual[0][2]]]);
+				}
+				if (actual[0][2] === actual[1][2] && actual[0][2] === actual[2][2]){
+					matched.push(1);
+					game.credit.change(bet * items.cost[items.list[actual[0][2]]]);
+				};	
 
 				if (matched.length == 0){
 					matched = false;
@@ -196,54 +217,46 @@ window.onload = function(){
 				return matched;
 			},
 			render: function(){
-				console.log('im gonna render lines');
-				view.layer2.shadowColor = '#000';
-			    view.layer2.shadowBlur = 0;
-			    view.layer2.shadowOffsetX = 0;
-			    view.layer2.shadowOffsetY = 4;
-			    view.layer2.strokeStyle = '#04756f';
-				if (reels.lines.matched !== false){
-					if (this.matched.indexOf(1) > -1 ){
-						view.layer2.beginPath();
-					    view.layer2.moveTo(100, 350);
-					    view.layer2.lineTo(895, 350);
-					    view.layer2.lineWidth = 15;
-					    view.layer2.stroke();
-					};
-					if (this.matched.indexOf(2) > -1 ){
-						view.layer2.beginPath();
-					    view.layer2.moveTo(100, 250);
-					    view.layer2.lineTo(200, 250);
-					    view.layer2.lineTo(795, 750);
-					    view.layer2.lineTo(895, 750);
-					    view.layer2.lineJoin = 'bevel';
-					    view.layer2.lineWidth = 15;
-					    view.layer2.stroke();
-					};
-					if (this.matched.indexOf(3) > -1 ){
-						view.layer2.beginPath();
-					    view.layer2.moveTo(100, 500);
-					    view.layer2.lineTo(895, 500);
-					    view.layer2.lineWidth = 15;
-					    view.layer2.stroke();
-					};
-					if (this.matched.indexOf(4) > -1 ){
-						view.layer2.beginPath();
-					    view.layer2.moveTo(100, 750);
-					    view.layer2.lineTo(200, 750);
-					    view.layer2.lineTo(795, 250);
-					    view.layer2.lineTo(895, 250);
-					    view.layer2.lineWidth = 15;
-					    view.layer2.stroke();
-					};
-					if (this.matched.indexOf(5) > -1 ){
-						view.layer2.beginPath();
-					    view.layer2.moveTo(100, 650);
-					    view.layer2.lineTo(895, 650);
-					    view.layer2.lineWidth = 15;
-					    view.layer2.stroke();
-					};
-				}
+				if (this.matched.indexOf(1) > -1 ){
+					view.layer2.beginPath();
+				    view.layer2.moveTo(100, 350);
+				    view.layer2.lineTo(895, 350);
+				    view.layer2.lineWidth = 15;
+				    view.layer2.stroke();
+				};
+				if (this.matched.indexOf(2) > -1 ){
+					view.layer2.beginPath();
+				    view.layer2.moveTo(100, 250);
+				    view.layer2.lineTo(200, 250);
+				    view.layer2.lineTo(795, 750);
+				    view.layer2.lineTo(895, 750);
+				    view.layer2.lineJoin = 'bevel';
+				    view.layer2.lineWidth = 15;
+				    view.layer2.stroke();
+				};
+				if (this.matched.indexOf(3) > -1 ){
+					view.layer2.beginPath();
+				    view.layer2.moveTo(100, 500);
+				    view.layer2.lineTo(895, 500);
+				    view.layer2.lineWidth = 15;
+				    view.layer2.stroke();
+				};
+				if (this.matched.indexOf(4) > -1 ){
+					view.layer2.beginPath();
+				    view.layer2.moveTo(100, 750);
+				    view.layer2.lineTo(200, 750);
+				    view.layer2.lineTo(795, 250);
+				    view.layer2.lineTo(895, 250);
+				    view.layer2.lineWidth = 15;
+				    view.layer2.stroke();
+				};
+				if (this.matched.indexOf(5) > -1 ){
+					view.layer2.beginPath();
+				    view.layer2.moveTo(100, 650);
+				    view.layer2.lineTo(895, 650);
+				    view.layer2.lineWidth = 15;
+				    view.layer2.stroke();
+				};
 			}
 		},
 		sequence: [[],[],[]],
@@ -278,7 +291,7 @@ window.onload = function(){
 						generated[i][k] = 5;
 						break;
 
-						case (rand >= 67 && rand < 69):
+						case (rand >= 67 && rand <= 69):
 						generated[i][k] = 6;
 						break;
 					}
@@ -331,6 +344,7 @@ window.onload = function(){
 			var interval;
 			var fore = [true, true, true];
 			reels.matched = false;
+			clearInterval(reels.lines.interval);
 			view.layer2.clearRect(0,0,1000,1000);
 			game.active = false;
 			var range = (reels.sequence[0].length - 3) * 200;
