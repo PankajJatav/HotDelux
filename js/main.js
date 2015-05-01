@@ -188,6 +188,7 @@ window.onload = function(){
 			matched: false,
 			check: function(){
 				matched = [];
+				var bet = game.betPerLine.val;
 				var actual = reels.getActual();
 				if (actual[0][0] === actual[1][0] && actual[0][0] === actual[2][0]){
 					matched.push(5);
