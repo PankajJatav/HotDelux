@@ -1,17 +1,48 @@
 window.onload = function(){
-	var consts = {
-		reelLength: 15,
-		itemWidth: 250,
+
+	//RAF---------------------------------------------------------------------------------------------
+
+	(function() {
+	 	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+		window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+		window.requestAnimationFrame = requestAnimationFrame;
+	})();
+
+	//Config------------------------------------------------------------------------------------------
+	
+	config = {
+		reelLength:14,
+		renderResolution: 700
 	};
 
-	var controls = document.getElementById('controls'); //Позиционирование блока контроля
+	//View--------------------------------------------------------------------------------------------
+	
+	view = {
+		canvas0: document.getElementById('canvas-0'),
+		canvas1: document.getElementById('canvas-1'),
+		layer0 : document.getElementById('canvas-0').getContext('2d'),
+		layer1 : document.getElementById('canvas-1').getContext('2d')
+	};
+
+	view.canvas0.width = config.renderResolution;
+	view.canvas0.height = view.canvas0.width;
+	view.canvas1.width = view.canvas0.width;
+	view.canvas1.height = view.canvas0.height
+
+	view.layer1.shadowColor = '#222';
+    view.layer1.shadowBlur = 0;
+    view.layer1.shadowOffsetX = 0;
+    view.layer1.strokeStyle = '#04756f';
+
+	//controls----------------------------------------------------------------------------------------
+	
+	controls = document.getElementById('controls'); 
 	controls.set = function(){
-		var box = document.getElementById('canvas-0');
-		controls.style.width = box.offsetWidth + 'px'; 
-		controls.style.height = 0.16 * box.offsetWidth + 'px';
-		controls.style.bottom = box.getBoundingClientRect().bottom - box.offsetWidth + 'px';
-		controls.style.left = box.getBoundingClientRect().left + 'px';
-		controls.style.fontSize = 0.05 * box.offsetWidth + 'px';
+		controls.style.width = view.canvas0.offsetWidth + 'px'; 
+		controls.style.height = 0.16 * view.canvas0.offsetWidth + 'px';
+		controls.style.bottom = view.canvas0.getBoundingClientRect().bottom - view.canvas0.offsetWidth + 'px';
+		controls.style.left = view.canvas0.getBoundingClientRect().left + 'px';
+		controls.style.fontSize = 0.05 * view.canvas0.offsetWidth + 'px';
 	};
 	controls.set();
 	window.onresize = function(){
@@ -47,7 +78,9 @@ window.onload = function(){
 		bet: document.getElementById('bet'),
 	}
 
-	var game = {
+	//Game-------------------------------------------------------------------------------------------
+	
+	game = {
 		credit: {
 			val: 1000,
 			refresh: function(){
@@ -91,9 +124,9 @@ window.onload = function(){
 			if (this.active === true){
 				this.reset();
 				reels.compose();
-				reels.offset[0] = ((consts.reelLength - 3) * 200);
-				reels.offset[1] = ((consts.reelLength - 3) * 200);
-				reels.offset[2] = ((consts.reelLength - 3) * 200);
+				reels.offset[0] = ((config.reelLength - 3) * 200);
+				reels.offset[1] = ((config.reelLength - 3) * 200);
+				reels.offset[2] = ((config.reelLength - 3) * 200);
 				game.render();
 			}
 		},
@@ -107,24 +140,10 @@ window.onload = function(){
 			requestAnimationFrame(game.render);
 		}
 	};
-
-	(function() {
-	 	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-		window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-		window.requestAnimationFrame = requestAnimationFrame;
-	})();
-
 	
-
-	Object.size = function(obj) {
-	    var size = 0, key;
-	    for (key in obj) {
-	        if (obj.hasOwnProperty(key)) size++;
-	    }
-	    return size;
-	};
+	//Images---------------------------------------------------------------------------------------------
 	
-	var graphics = {	
+	graphics = {	
 		list: ['lemons','cherries','oranges','plums','bars','stars','sevens','playtable'],
 		lemons : new Image(),
 		cherries : new Image(),
@@ -145,16 +164,28 @@ window.onload = function(){
 	graphics.sevens.src = 'img/sevens.png';
 	graphics.playtable.src = 'img/playtable.png';
 
-	var view = {
-		layer1: document.getElementById('canvas-0').getContext('2d'),
-		layer2: document.getElementById('canvas-1').getContext('2d')
+	Object.size = function(obj) {
+	    var size = 0, key;
+	    for (key in obj) {
+	        if (obj.hasOwnProperty(key)) size++;
+	    }
+	    return size;
 	};
-	view.layer2.shadowColor = '#000';
-    view.layer2.shadowBlur = 0;
-    view.layer2.shadowOffsetX = 0;
-    view.layer2.shadowOffsetY = 4;
-    view.layer2.strokeStyle = '#04756f';
 
+	var imageCount = Object.size(graphics);
+	var imagesLoaded = 0;
+	for(var i = 0; i < imageCount - 1; i++){
+	    graphics[graphics.list[i]].onload = function(){
+	        imagesLoaded++;
+	        if(imagesLoaded == imageCount - 1){
+	        	console.log('Images are loaded');
+	            game.start();
+	        }
+	    }
+	};
+
+	//Items---------------------------------------------------------------------------------------------
+	
 	items = {
 		list: ['lemons','cherries','oranges','plums','bars','stars','sevens'],
 		cost: {
@@ -177,10 +208,13 @@ window.onload = function(){
 		},
 		render: function(item, reel, y){
 			//console.log(graphics[item], reel, y);		
-			view.layer1.drawImage(graphics[item], 100 + (reel - 1) * consts.itemWidth + (reel - 1) * 25, y); // y: 165 - 1; 375 - 2; 565 - 3	
+			var factor = config.renderResolution/1000;
+			view.layer0.drawImage(graphics[item], 100 * factor + (reel - 1) * 250 * factor + (reel - 1) * 25 * factor, y * factor, 250 * factor, 200 * factor); // y: 165 - 1; 375 - 2; 565 - 3	
 		}
 	};
 
+	//Reels---------------------------------------------------------------------------------------------
+	
 	reels = {
 		blur: 0,
 		lines: {
@@ -218,45 +252,47 @@ window.onload = function(){
 				return matched;
 			},
 			render: function(){
+				var factor = config.renderResolution/1000;
+				view.layer1.shadowOffsetY = 4 * factor;
 				if (this.matched.indexOf(1) > -1 ){
-					view.layer2.beginPath();
-				    view.layer2.moveTo(100, 350);
-				    view.layer2.lineTo(895, 350);
-				    view.layer2.lineWidth = 15;
-				    view.layer2.stroke();
+					view.layer1.beginPath();
+				    view.layer1.moveTo(100 * factor, 350 * factor);
+				    view.layer1.lineTo(895 * factor, 350 * factor);
+				    view.layer1.lineWidth = 15 * factor;
+				    view.layer1.stroke();
 				};
 				if (this.matched.indexOf(2) > -1 ){
-					view.layer2.beginPath();
-				    view.layer2.moveTo(100, 250);
-				    view.layer2.lineTo(200, 250);
-				    view.layer2.lineTo(795, 750);
-				    view.layer2.lineTo(895, 750);
-				    view.layer2.lineJoin = 'bevel';
-				    view.layer2.lineWidth = 15;
-				    view.layer2.stroke();
+					view.layer1.beginPath();
+				    view.layer1.moveTo(100 * factor, 250 * factor);
+				    view.layer1.lineTo(200 * factor, 250 * factor);
+				    view.layer1.lineTo(795 * factor, 750 * factor);
+				    view.layer1.lineTo(895 * factor, 750 * factor);
+				    view.layer1.lineJoin = 'bevel';
+				    view.layer1.lineWidth = 15 * factor;
+				    view.layer1.stroke();
 				};
 				if (this.matched.indexOf(3) > -1 ){
-					view.layer2.beginPath();
-				    view.layer2.moveTo(100, 500);
-				    view.layer2.lineTo(895, 500);
-				    view.layer2.lineWidth = 15;
-				    view.layer2.stroke();
+					view.layer1.beginPath();
+				    view.layer1.moveTo(100 * factor, 500 * factor);
+				    view.layer1.lineTo(895 * factor, 500 * factor);
+				    view.layer1.lineWidth = 15 * factor;
+				    view.layer1.stroke();
 				};
 				if (this.matched.indexOf(4) > -1 ){
-					view.layer2.beginPath();
-				    view.layer2.moveTo(100, 750);
-				    view.layer2.lineTo(200, 750);
-				    view.layer2.lineTo(795, 250);
-				    view.layer2.lineTo(895, 250);
-				    view.layer2.lineWidth = 15;
-				    view.layer2.stroke();
+					view.layer1.beginPath();
+				    view.layer1.moveTo(100 * factor, 750 * factor);
+				    view.layer1.lineTo(200 * factor, 750 * factor);
+				    view.layer1.lineTo(795 * factor, 250 * factor);
+				    view.layer1.lineTo(895 * factor, 250 * factor);
+				    view.layer1.lineWidth = 15 * factor;
+				    view.layer1.stroke();
 				};
 				if (this.matched.indexOf(5) > -1 ){
-					view.layer2.beginPath();
-				    view.layer2.moveTo(100, 650);
-				    view.layer2.lineTo(895, 650);
-				    view.layer2.lineWidth = 15;
-				    view.layer2.stroke();
+					view.layer1.beginPath();
+				    view.layer1.moveTo(100 * factor, 650 * factor);
+				    view.layer1.lineTo(895 * factor, 650 * factor);
+				    view.layer1.lineWidth = 15 * factor;
+				    view.layer1.stroke();
 				};
 			}
 		},
@@ -265,34 +301,34 @@ window.onload = function(){
 		generate: function(){
 			var generated = [[],[],[]];
 			for (var i = 0; i < 3; i++){
-				for (k = 0; k < consts.reelLength; k++){
-					var rand = Math.floor(Math.random() * 69);
+				for (k = 0; k < config.reelLength; k++){
+					var rand = Math.floor(Math.random() * 110);
 					switch (true) {
 						case (rand >=  0 && rand < 20):
 						generated[i][k] = 0;
 						break;
 
-						case (rand >= 20 && rand < 30):
+						case (rand >= 20 && rand < 40):
 						generated[i][k] = 1;
 						break;
 
-						case (rand >= 30 && rand < 40):
+						case (rand >= 40 && rand < 60):
 						generated[i][k] = 2;
 						break;
 
-						case (rand >= 40 && rand < 50):
+						case (rand >= 60 && rand < 80):
 						generated[i][k] = 3;
 						break;
 
-						case (rand >= 50 && rand < 60):
+						case (rand >= 80 && rand < 95):
 						generated[i][k] = 4;
 						break;
 
-						case (rand >= 60 && rand < 67):
+						case (rand >= 95 && rand < 105):
 						generated[i][k] = 5;
 						break;
 
-						case (rand >= 67 && rand <= 69):
+						case (rand >= 105 && rand <= 110):
 						generated[i][k] = 6;
 						break;
 					}
@@ -334,19 +370,13 @@ window.onload = function(){
 			} else {
 				this.sequence = attachable;
 			};
-			//for (var k = 0; k < this.sequence[0].length; k++){
-			//	console.log(k,': ', this.sequence[0][k],this.sequence[1][k],this.sequence[2][k]);
-			//	if (k === this.sequence[0].length - 1){
-			//		console.log('--------------------------------------');
-			//	}
-			//};
 		},
 		revolve: function(){
 			var interval;
 			var fore = [true, true, true];
 			reels.matched = false;
 			clearInterval(reels.lines.interval);
-			view.layer2.clearRect(0,0,1000,1000);
+			view.layer1.clearRect(0,0,1000,1000);
 			game.active = false;
 			var range = (reels.sequence[0].length - 3) * 200;
 			interval = setInterval(function(){
@@ -355,11 +385,11 @@ window.onload = function(){
 					for (var i = 0; i < 3; i++){
 						//console.log(reels.offset[i], (reels.sequence[0].length - 3) * 200);
 						if (reels.offset[i] < range/2 && fore[i]){
-							reels.offset[i]+= Math.pow(reels.offset[i], 1/1.6);
+							reels.offset[i]+= Math.pow(reels.offset[i], 1/1.8);
 						}
 						else if (reels.offset[i] >= range/2 && reels.offset[i] < range) {
 							fore[i] = false;
-							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.7 + (i+1) * 0.2));
+							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.6 + (i+1) * 0.2));
 							//console.log(reels.offset);
 						} else if (reels.offset[i] >= range){
 							reels.offset[i] = range
@@ -372,11 +402,11 @@ window.onload = function(){
 					};	
 					game.active = true;
 				}
-			}, 5)
+			}, 10)
 			
 		},
 		render: function(){
-			view.layer1.clearRect(0,0,1000,1000);
+			view.layer0.clearRect(0,0, config.renderResolution, config.renderResolution);
 			for (var i = 0; i < 3; i++){
 				for(var k = reels.sequence[i].length - 1; k >=0 ; k--){
 					items.render(items.list[reels.sequence[i][k]], i + 1, 600 + reels.offset[i] - k * 200);
@@ -385,38 +415,7 @@ window.onload = function(){
 			};
 		}
 	};
-
-	reels.offset.set = function(val){
-		for (var i = 0; i < this.length; i++){
-			this[i] = val;
-		}
-	};
 	
-
-	init = function(){
-		game.start();
-	};
-	
-
-	var imageCount = Object.size(graphics);
-	var imagesLoaded = 0;
-	for(var i = 0; i < imageCount - 1; i++){
-	    graphics[graphics.list[i]].onload = function(){
-	        imagesLoaded++;
-	        if(imagesLoaded == imageCount - 1){
-	        	console.log('Images are loaded');
-	            init();
-	        }
-	    }
-	};
-
-	function step(timestamp) {
-	  	var progress = timestamp - start;
-	  	d.style.left = Math.min(progress/10, 200) + "px";
-	  	if (progress < 2000) {
-	   
-	  }
-	}
 	requestAnimationFrame(game.render);
 }
 
