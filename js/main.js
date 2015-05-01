@@ -1,6 +1,6 @@
 window.onload = function(){
 	var consts = {
-		reelLength: 60,
+		reelLength: 15,
 		itemWidth: 250,
 	};
 
@@ -355,11 +355,11 @@ window.onload = function(){
 					for (var i = 0; i < 3; i++){
 						//console.log(reels.offset[i], (reels.sequence[0].length - 3) * 200);
 						if (reels.offset[i] < range/2 && fore[i]){
-							reels.offset[i]+= Math.pow(reels.offset[i], 1/(1.7 + (i+1) * 0.1));
+							reels.offset[i]+= Math.pow(reels.offset[i], 1/1.6);
 						}
 						else if (reels.offset[i] >= range/2 && reels.offset[i] < range) {
 							fore[i] = false;
-							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.7 + (i+1) * 0.1));
+							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.7 + (i+1) * 0.2));
 							//console.log(reels.offset);
 						} else if (reels.offset[i] >= range){
 							reels.offset[i] = range
@@ -372,7 +372,7 @@ window.onload = function(){
 					};	
 					game.active = true;
 				}
-			}, 20)
+			}, 5)
 			
 		},
 		render: function(){
