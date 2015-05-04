@@ -11,8 +11,17 @@ window.onload = function(){
 	//Config------------------------------------------------------------------------------------------
 	
 	config = {
-		reelLength:14,
-		renderResolution: 700
+		reelLength:15,
+		renderResolution: 800,
+		probabilities: {
+			lemons : 20,
+			cherries : 20,
+			oranges : 20,
+			plums : 20,
+			bars : 10,
+			stars : 5,
+			sevens : 2
+		}
 	};
 
 	//View--------------------------------------------------------------------------------------------
@@ -70,8 +79,11 @@ window.onload = function(){
 		game.betPerLine.decrease();
 	};
 	controls.i.autoplay.onclick = function(){
-		console.log(reels.lines.check());
+		
 	};
+	controls.i.playtable.onclick = function(){
+		game.playtable.show();
+	}
 	controls.o = {
 		credit: document.getElementById('credit'),
 		betPerLine: document.getElementById('bet-per-line'),
@@ -138,6 +150,29 @@ window.onload = function(){
 			reels.render();
 			game.refresh();
 			requestAnimationFrame(game.render);
+		},
+		playtable: {
+			interval: '',
+			shown: false,
+			show: function(){
+				console.log('dsfsdf');
+				if(!this.shown){
+					this.shown = true;
+					var offset = 1;
+					factor = config.renderResolution/1000;
+					this.interval = setInterval(function(){
+						if (offset <= 700 * factor){
+							view.layer1.drawImage(graphics.playtable, 0, 0, 1000, offset * factor * 2, 0, 150 * factor, 1000 * factor, offset);
+							offset+=10
+						} else {
+							clearInterval(game.playtable.interval);
+						}
+					}, 10)
+				} else {
+					this.shown = false;
+					view.layer1.clearRect(0,0, config.renderResolution, config.renderResolution)
+				}
+			}
 		}
 	};
 	
@@ -210,6 +245,16 @@ window.onload = function(){
 			//console.log(graphics[item], reel, y);		
 			var factor = config.renderResolution/1000;
 			view.layer0.drawImage(graphics[item], 100 * factor + (reel - 1) * 250 * factor + (reel - 1) * 25 * factor, y * factor, 250 * factor, 200 * factor); // y: 165 - 1; 375 - 2; 565 - 3	
+		},
+		getProbability : function(item, upper){
+			var limit = config.probabilities[item];
+			for (var i = 0; i < items.list.indexOf(item); i++){
+				limit+=config.probabilities[items.list[i]];
+			}
+			if (upper === false){
+				limit-=config.probabilities[item];
+			};
+			return limit;
 		}
 	};
 
@@ -300,35 +345,41 @@ window.onload = function(){
 		offset: [],
 		generate: function(){
 			var generated = [[],[],[]];
+			var sum = 0;
+			for (var i = 0; i < items.list.length; i++){
+				sum+=config.probabilities[items.list[i]];
+				console.log(i, items.getProbability(items.list[i], false), items.getProbability(items.list[i], true) )
+			};
+			console.log(sum);
 			for (var i = 0; i < 3; i++){
 				for (k = 0; k < config.reelLength; k++){
-					var rand = Math.floor(Math.random() * 110);
+					var rand = Math.floor(Math.random() * sum);
 					switch (true) {
-						case (rand >=  0 && rand < 20):
+						case (rand >= items.getProbability(items.list[0], false) && rand < items.getProbability(items.list[0], true)):
 						generated[i][k] = 0;
 						break;
 
-						case (rand >= 20 && rand < 40):
+						case (rand >= items.getProbability(items.list[1], false) && rand < items.getProbability(items.list[1], true)):
 						generated[i][k] = 1;
 						break;
 
-						case (rand >= 40 && rand < 60):
+						case (rand >= items.getProbability(items.list[2], false) && rand < items.getProbability(items.list[2], true)):
 						generated[i][k] = 2;
 						break;
 
-						case (rand >= 60 && rand < 80):
+						case (rand >= items.getProbability(items.list[3], false) && rand < items.getProbability(items.list[3], true)):
 						generated[i][k] = 3;
 						break;
 
-						case (rand >= 80 && rand < 95):
+						case (rand >= items.getProbability(items.list[4], false) && rand < items.getProbability(items.list[4], true)):
 						generated[i][k] = 4;
 						break;
 
-						case (rand >= 95 && rand < 105):
+						case (rand >= items.getProbability(items.list[5], false) && rand < items.getProbability(items.list[5], true)):
 						generated[i][k] = 5;
 						break;
 
-						case (rand >= 105 && rand <= 110):
+						case (rand >= items.getProbability(items.list[6], false) && rand <= items.getProbability(items.list[6], true)):
 						generated[i][k] = 6;
 						break;
 					}
@@ -409,6 +460,7 @@ window.onload = function(){
 			view.layer0.clearRect(0,0, config.renderResolution, config.renderResolution);
 			for (var i = 0; i < 3; i++){
 				for(var k = reels.sequence[i].length - 1; k >=0 ; k--){
+					//console.log(i, k, reels.sequence[i][k], items.list[reels.sequence[i][k]]);
 					items.render(items.list[reels.sequence[i][k]], i + 1, 600 + reels.offset[i] - k * 200);
 
 				}
