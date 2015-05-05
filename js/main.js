@@ -11,16 +11,17 @@ window.onload = function(){
 	//Config------------------------------------------------------------------------------------------
 	
 	config = {
-		reelLength:15,
-		renderResolution: 800,
-		probabilities: {
-			lemons : 20,
-			cherries : 20,
-			oranges : 20,
-			plums : 20,
-			bars : 10,
-			stars : 5,
-			sevens : 2
+		reelLength: 15,																//Length of reels
+		renderResolution: 1000, 
+		openingCapital: 2000,
+		probabilities: {													//Relatival probabilities
+			lemons : 50,
+			cherries : 50,
+			oranges : 50,
+			plums : 50,
+			bars : 25,
+			stars : 12,
+			sevens : 6
 		}
 	};
 
@@ -29,8 +30,8 @@ window.onload = function(){
 	view = {
 		canvas0: document.getElementById('canvas-0'),
 		canvas1: document.getElementById('canvas-1'),
-		layer0 : document.getElementById('canvas-0').getContext('2d'),
-		layer1 : document.getElementById('canvas-1').getContext('2d')
+		layer0 : document.getElementById('canvas-0').getContext('2d'), 						 //Reels
+		layer1 : document.getElementById('canvas-1').getContext('2d') 						 //Lines
 	};
 
 	view.canvas0.width = config.renderResolution;
@@ -43,9 +44,9 @@ window.onload = function(){
     view.layer1.shadowOffsetX = 0;
     view.layer1.strokeStyle = '#04756f';
 
-	//controls----------------------------------------------------------------------------------------
+	//Controls----------------------------------------------------------------------------------------
 	
-	controls = document.getElementById('controls'); 
+	controls = document.getElementById('controls'); 					//Setting up the control-div
 	controls.set = function(){
 		controls.style.width = view.canvas0.offsetWidth + 'px'; 
 		controls.style.height = 0.16 * view.canvas0.offsetWidth + 'px';
@@ -64,6 +65,7 @@ window.onload = function(){
 		start: document.getElementById('start'),
 		playtable: document.getElementById('playtable')
 	};
+		//Clicks:
 	controls.i.start.onclick = function(){
 		if (game.active === true && game.credit.val > 0){
 			var bet = game.bet.val();
@@ -94,7 +96,7 @@ window.onload = function(){
 	
 	game = {
 		credit: {
-			val: 1000,
+			val: config.openingCapital,
 			refresh: function(){
 				controls.o.credit.innerHTML = game.credit.val;
 			},
@@ -143,7 +145,7 @@ window.onload = function(){
 			}
 		},
 		reset: function(){
-			game.credit.val = 1000;
+			game.credit.val = config.openingCapital;
 			game.betPerLine.val = 1;
 		},
 		render: function(){
@@ -162,7 +164,7 @@ window.onload = function(){
 					factor = config.renderResolution/1000;
 					this.interval = setInterval(function(){
 						if (offset <= 700 * factor){
-							view.layer1.drawImage(graphics.playtable, 0, 0, 1000, offset * factor * 2, 0, 150 * factor, 1000 * factor, offset);
+							view.layer1.drawImage(graphics.playtable, 0, 0, 1000, offset * factor , 0, 150 * factor, 1000 * factor, offset);
 							offset+=10
 						} else {
 							clearInterval(game.playtable.interval);
@@ -246,7 +248,7 @@ window.onload = function(){
 			var factor = config.renderResolution/1000;
 			view.layer0.drawImage(graphics[item], 100 * factor + (reel - 1) * 250 * factor + (reel - 1) * 25 * factor, y * factor, 250 * factor, 200 * factor); // y: 165 - 1; 375 - 2; 565 - 3	
 		},
-		getProbability : function(item, upper){
+		getProbability: function(item, upper){
 			var limit = config.probabilities[item];
 			for (var i = 0; i < items.list.indexOf(item); i++){
 				limit+=config.probabilities[items.list[i]];
@@ -261,7 +263,7 @@ window.onload = function(){
 	//Reels---------------------------------------------------------------------------------------------
 	
 	reels = {
-		blur: 0,
+		//blur: 0,
 		lines: {
 			interval: '',
 			matched: false,
@@ -329,6 +331,7 @@ window.onload = function(){
 				    view.layer1.lineTo(200 * factor, 750 * factor);
 				    view.layer1.lineTo(795 * factor, 250 * factor);
 				    view.layer1.lineTo(895 * factor, 250 * factor);
+				    view.layer1.lineJoin = 'bevel';
 				    view.layer1.lineWidth = 15 * factor;
 				    view.layer1.stroke();
 				};
@@ -350,7 +353,7 @@ window.onload = function(){
 				sum+=config.probabilities[items.list[i]];
 				console.log(i, items.getProbability(items.list[i], false), items.getProbability(items.list[i], true) )
 			};
-			console.log(sum);
+			//console.log(sum);
 			for (var i = 0; i < 3; i++){
 				for (k = 0; k < config.reelLength; k++){
 					var rand = Math.floor(Math.random() * sum);
@@ -436,11 +439,11 @@ window.onload = function(){
 					for (var i = 0; i < 3; i++){
 						//console.log(reels.offset[i], (reels.sequence[0].length - 3) * 200);
 						if (reels.offset[i] < range/2 && fore[i]){
-							reels.offset[i]+= Math.pow(reels.offset[i], 1/1.8);
+							reels.offset[i]+= Math.pow(reels.offset[i], 1/1.6);
 						}
 						else if (reels.offset[i] >= range/2 && reels.offset[i] < range) {
 							fore[i] = false;
-							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.6 + (i+1) * 0.2));
+							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.4 + (i+1) * 0.2));
 							//console.log(reels.offset);
 						} else if (reels.offset[i] >= range){
 							reels.offset[i] = range
@@ -453,7 +456,7 @@ window.onload = function(){
 					};	
 					game.active = true;
 				}
-			}, 10)
+			}, 15)
 			
 		},
 		render: function(){
