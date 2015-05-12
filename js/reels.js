@@ -1,5 +1,5 @@
 'use strict';
-define(['items', 'config/config', 'canvas', 'game'], function(items, config, view, game){
+define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, config, view, game, server){
 	var reels = {
 		//blur: 0,
 		lines: {
@@ -89,9 +89,9 @@ define(['items', 'config/config', 'canvas', 'game'], function(items, config, vie
 			var sum = 0;
 			for (var i = 0; i < items.list.length; i++){
 				sum+=config.probabilities[items.list[i]];
-				console.log(i, items.getProbability(items.list[i], false), items.getProbability(items.list[i], true) )
+				//console.log(i, items.getProbability(items.list[i], false), items.getProbability(items.list[i], true) )
 			};
-			console.log(config)
+			//console.log(config)
 			for (var i = 0; i < 3; i++){
 				for (var k = 0; k < config.reelsLength; k++){
 					var rand = Math.floor(Math.random() * sum);
@@ -126,11 +126,11 @@ define(['items', 'config/config', 'canvas', 'game'], function(items, config, vie
 					}
 				}
 			};
-			console.log(generated);
+			//console.log(generated);
 			return generated;
 		},
 		getActual: function(){
-		console.log('getting actual');
+		//console.log('getting actual');
 			var actual = [[],[],[]]
 			for (var i = 0; i < 3; i++){
 				for (var k = this.sequence[i].length - 1; k >= this.sequence[i].length -3; k--){
@@ -140,34 +140,40 @@ define(['items', 'config/config', 'canvas', 'game'], function(items, config, vie
 			return actual;
 		},
 		compose: function(){
-			console.log('acting reels.compose');
+			console.log('_________________________________________________')
 			reels.offset = [1,1,1];
+			var i,k;
+			var sequence = [[],[],[]];
 			var attachable = this.generate();
+			console.log('Locally generated items are', attachable);
+			var actual = this.getActual();
+			console.log('Actual items are', actual)
+			var fromServer = server.spin();
+			console.log('Accepted from server: ', fromServer);
 			if (this.sequence[0].length !== 0){
-				var actual = this.getActual();
-				for (var i = 0; i < 3; i++){
-					for (var k = this.sequence[i].length - 1; k >= this.sequence[i].length -3; k--){
-						actual[i][k - (this.sequence[i].length -3)] = this.sequence[i][k];
+				for (i = 0; i < 3; i++){
+					for (k = 0; k < actual[i].length; k++){
+						sequence[i].push(actual[i][k]);
 					}
 				};
-				this.sequence = [[],[],[]];
-				for (var i = 0; i < attachable.length; i++){
-					for (var k = 0; k < actual[i].length; k++){
-						this.sequence[i][k] = actual[i][k]
-					}
-				}
-				for (var i = 0; i < attachable.length; i++){
-					for (var k = 3; k < attachable[i].length + 3; k++){
-						this.sequence[i][k] = attachable[i][k - 3];
+				for (i = 0; i < 3; i++){
+					for (k = 0; k < attachable[i].length; k++){
+						sequence[i].push(attachable[i][k])
 					}
 				}
 			} else {
-				this.sequence = attachable;
+				sequence = attachable;
 	
 			};
+			for (i = 0; i < 3; i++){
+				for (k = 2; k >=0; k--){
+					sequence[i].push(fromServer[i][k])
+				}
+			};
+			this.sequence = sequence;
+			console.log('Resulted sequence is ', this.sequence);
 		},
 		revolve: function(){
-			console.log('acting reels.revolve', reels.offset);
 			var interval;
 			var fore = [true, true, true];
 			reels.matched = false;
@@ -202,7 +208,7 @@ define(['items', 'config/config', 'canvas', 'game'], function(items, config, vie
 			
 		},
 		render: function(){
-			console.log('acting reels.render');
+			//console.log('acting reels.render');
 			view.layer0.clearRect(0,0, config.renderResolution, config.renderResolution);
 			for (var i = 0; i < 3; i++){
 				for(var k = reels.sequence[i].length - 1; k >=0 ; k--){
