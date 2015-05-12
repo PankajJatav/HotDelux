@@ -10,7 +10,7 @@
 		window.requestAnimationFrame = requestAnimationFrame;
 	})();
 
-	require(['config/config','reels', 'items', 'graphics', 'game', 'controls', 'canvas', 'utils/utils'], function(config, reels, items, graphics, game, controls, view, utils){
+	require(['config/config','reels', 'items', 'graphics', 'game', 'controls', 'canvas'], function(config, reels, items, graphics, game, controls, view, utils){
 		var hotdelux = {};
 		hotdelux = {
 			active: true,
@@ -23,7 +23,7 @@
 			controls: controls,
 			view: view,
 			reset: function(){
-				this.reels.offset = [(config.reelLength - 3) * 200, (config.reelLength - 3) * 200, (config.reelLength - 3) * 200];
+				this.reels.offset = [(reels.sequence[0].length - 3) * 200, (reels.sequence[0].length - 3) * 200, (reels.sequence[0].length - 3) * 200];
 				this.game.credit.val = config.openingCapital;
 				this.game.betPerLine.val = 1;
 			},
@@ -31,9 +31,7 @@
 				if (this.active === true){
 					this.reset();
 					this.reels.compose();
-					this.reels.offset[0] = ((config.reelLength - 3) * 200);
-					this.reels.offset[1] = ((config.reelLength - 3) * 200);
-					this.reels.offset[2] = ((config.reelLength - 3) * 200);
+					this.reels.offset = [(reels.sequence[0].length - 3) * 200, (reels.sequence[0].length - 3) * 200, (reels.sequence[0].length - 3) * 200];
 					this.render();
 				}
 			},

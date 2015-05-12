@@ -211,8 +211,7 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 			view.layer0.clearRect(0,0, config.renderResolution, config.renderResolution);
 			for (var i = 0; i < 3; i++){
 				for(var k = reels.sequence[i].length - 1; k >=0 ; k--){
-					//console.log(i, k, reels.sequence[i][k], items.list[reels.sequence[i][k]]);
-					//console.log('seq: ', reels.sequence, 'offset:', reels.offset);
+					console.log(this.offset);
 					window.hotdelux.items.render(items.list[reels.sequence[i][k]], i + 1, 600 + this.offset[i] - k * 200);
 
 				}
