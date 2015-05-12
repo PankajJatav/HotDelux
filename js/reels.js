@@ -30,9 +30,9 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 					game.credit.change(bet * items.cost[items.list[actual[0][2]]]);
 				}
 
-				if (matched.length == 0){
-					matched = false
-				};
+				if (matched.length === 0){
+					matched = false;
+				}
 				this.matched = matched;
 				return matched;
 			},
@@ -55,14 +55,14 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 				    view.layer1.lineJoin = 'bevel';
 				    view.layer1.lineWidth = 15 * factor;
 				    view.layer1.stroke();
-				};
+				}
 				if (this.matched.indexOf(3) > -1 ){
 					view.layer1.beginPath();
 				    view.layer1.moveTo(100 * factor, 500 * factor);
 				    view.layer1.lineTo(895 * factor, 500 * factor);
 				    view.layer1.lineWidth = 15 * factor;
 				    view.layer1.stroke();
-				};
+				}
 				if (this.matched.indexOf(4) > -1 ){
 					view.layer1.beginPath();
 				    view.layer1.moveTo(100 * factor, 750 * factor);
@@ -72,7 +72,7 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 				    view.layer1.lineJoin = 'bevel';
 				    view.layer1.lineWidth = 15 * factor;
 				    view.layer1.stroke();
-				};
+				}
 				if (this.matched.indexOf(5) > -1 ){
 					view.layer1.beginPath();
 				    view.layer1.moveTo(100 * factor, 650 * factor);
@@ -90,9 +90,9 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 			for (var i = 0; i < items.list.length; i++){
 				sum+=config.probabilities[items.list[i]];
 				//console.log(i, items.getProbability(items.list[i], false), items.getProbability(items.list[i], true) )
-			};
+			}
 			//console.log(config)
-			for (var i = 0; i < 3; i++){
+			for (i = 0; i < 3; i++){
 				for (var k = 0; k < config.reelsLength; k++){
 					var rand = Math.floor(Math.random() * sum);
 					switch (true) {
@@ -125,29 +125,29 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 						break;
 					}
 				}
-			};
+			}
 			//console.log(generated);
 			return generated;
 		},
 		getActual: function(){
 		//console.log('getting actual');
-			var actual = [[],[],[]]
+			var actual = [[],[],[]];
 			for (var i = 0; i < 3; i++){
 				for (var k = this.sequence[i].length - 1; k >= this.sequence[i].length -3; k--){
 					actual[i][k - (this.sequence[i].length -3)] = this.sequence[i][k];
 				}
-			};
+			}
 			return actual;
 		},
 		compose: function(){
-			console.log('_________________________________________________')
+			console.log('_________________________________________________');
 			reels.offset = [1,1,1];
 			var i,k;
 			var sequence = [[],[],[]];
 			var attachable = this.generate();
 			console.log('Locally generated items are', attachable);
 			var actual = this.getActual();
-			console.log('Actual items are', actual)
+			console.log('Actual items are', actual);
 			var fromServer = server.spin();
 			console.log('Accepted from server: ', fromServer);
 			if (this.sequence[0].length !== 0){
@@ -155,21 +155,21 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 					for (k = 0; k < actual[i].length; k++){
 						sequence[i].push(actual[i][k]);
 					}
-				};
+				}
 				for (i = 0; i < 3; i++){
 					for (k = 0; k < attachable[i].length; k++){
-						sequence[i].push(attachable[i][k])
+						sequence[i].push(attachable[i][k]);
 					}
 				}
 			} else {
 				sequence = attachable;
 	
-			};
+			}
 			for (i = 0; i < 3; i++){
 				for (k = 2; k >=0; k--){
-					sequence[i].push(fromServer[i][k])
+					sequence[i].push(fromServer[i][k]);
 				}
-			};
+			}
 			this.sequence = sequence;
 			console.log('Resulted sequence is ', this.sequence);
 		},
@@ -194,18 +194,17 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 							reels.offset[i]+= Math.pow(range - reels.offset[i], 1/(1.4 + (i+1) * 0.2));
 							//console.log(reels.offset);
 						} else if (reels.offset[i] >= range){
-							reels.offset[i] = range
+							reels.offset[i] = range;
 						}
 					}
 				} else {
 					clearInterval(interval);
 					if (reels.lines.check() !== false){
 						reels.lines.render();
-					};	
+					}
 					game.active = true;
 				}
-			}, 15)
-			
+			}, 15);
 		},
 		render: function(){
 			//console.log('acting reels.render');
@@ -217,9 +216,9 @@ define(['items', 'config/config', 'canvas', 'game', 'server'], function(items, c
 					window.hotdelux.items.render(items.list[reels.sequence[i][k]], i + 1, 600 + this.offset[i] - k * 200);
 
 				}
-			};
+			}
 		}
 	};
 
-	return reels
-})
+	return reels;
+});

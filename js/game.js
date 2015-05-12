@@ -27,12 +27,12 @@ define (['config/config', 'controls', 'canvas', 'graphics'], function(config, co
 			val: 1,
 			increase: function(){
 				if (this.val !== 10){
-					this.val++
+					this.val++;
 				}
 			},
 			decrease: function(){
 				if (this.val !== 1){
-					this.val--
+					this.val--;
 				}
 			},
 			refresh: function(){
@@ -55,19 +55,17 @@ define (['config/config', 'controls', 'canvas', 'graphics'], function(config, co
 					this.interval = setInterval(function(){
 						if (offset <= 700 * factor){
 							view.layer1.drawImage(graphics.playtable, 0, 0, 1000, offset * factor , 0, 150 * factor, 1000 * factor, offset);
-							offset+=10
+							offset+=10;
 						} else {
 							clearInterval(game.playtable.interval);
 						}
-					}, 10)
+					}, 10);
 				} else {
 					this.shown = false;
-					view.layer1.clearRect(0,0, config.renderResolution, config.renderResolution)
+					view.layer1.clearRect(0,0, config.renderResolution, config.renderResolution);
 				}
 			}
 		}
 	};
-
-
-	return game
-})
+	return game;
+});

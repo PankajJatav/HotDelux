@@ -3,7 +3,7 @@ define(function(){
 	var configuration = {
         reelsLength: 20,
         renderResolution: 1000,
-        openingCapital: 50,
+        openingCapital: 1500,
         probabilities: {
             lemons : 50,
             cherries : 50,
@@ -13,7 +13,7 @@ define(function(){
             stars : 12,
             sevens : 6
         }
-    }
+    };
 
-    return configuration
-})
+    return configuration;
+});

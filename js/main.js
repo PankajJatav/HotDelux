@@ -23,7 +23,7 @@
 			controls: controls,
 			view: view,
 			reset: function(){
-				this.reels.offset = [(config.reelLength - 3) * 200, (config.reelLength - 3) * 200, (config.reelLength - 3) * 200],
+				this.reels.offset = [(config.reelLength - 3) * 200, (config.reelLength - 3) * 200, (config.reelLength - 3) * 200];
 				this.game.credit.val = config.openingCapital;
 				this.game.betPerLine.val = 1;
 			},
@@ -50,6 +50,6 @@
 		window.onresize = function(){
 			window.hotdelux.controls.el.set();
 		};
-		return hotdelux
+		return hotdelux;
 	});
 }());

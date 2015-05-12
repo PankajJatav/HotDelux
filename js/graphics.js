@@ -22,4 +22,4 @@ define(function(){
 	graphics.playtable.src = 'img/playtable.png';
 
 	return graphics;
-})
+});

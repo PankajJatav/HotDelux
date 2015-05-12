@@ -1,7 +1,6 @@
 'use strict';
 define(['canvas','game','reels'],function(view, game, reels){
 	var controls = {};
-	var game, reels;
 	require(['game', 'reels'], function(rGame, rReels){
 		game = rGame;
 		reels = rReels;
@@ -41,7 +40,7 @@ define(['canvas','game','reels'],function(view, game, reels){
 	};
 	controls.i.playtable.onclick = function(){
 		game.playtable.show();
-	}
+	};
 	controls.o = {
 		credit: document.getElementById('credit'),
 		betPerLine: document.getElementById('bet-per-line'),
@@ -49,4 +48,4 @@ define(['canvas','game','reels'],function(view, game, reels){
 	};
 
 	return controls;
-})
+});

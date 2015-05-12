@@ -1,0 +1,19 @@
+{
+    "globals": {
+        "Evented" : true,
+        "Linear" : true,
+        "define" : true,
+        "Hammer" : true,
+        "console" : true,
+        "SteppedEase" : true,
+        "Circ" : true,
+        "require" : true,
+        "Draggable" : true,
+        "TimelineMax" : true,
+        "TweenMax" : true,
+        "TweenLite" : true,
+        "ion" : true,
+        "escape" : true,
+        "alert" : true
+    }
+}

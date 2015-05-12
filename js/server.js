@@ -10,8 +10,8 @@ define(['config/config', 'items'], function(config, items){
 		var sum = 0;
 		for (var i = 0; i < items.list.length; i++){
 			sum+=config.probabilities[items.list[i]];
-		};
-		for (var i = 0; i < 3; i++){
+		}
+		for (i = 0; i < 3; i++){
 			for (var k = 0; k < 3; k++){
 				var rand = Math.floor(Math.random() * sum);
 				switch (true) {
@@ -44,11 +44,11 @@ define(['config/config', 'items'], function(config, items){
 					break;
 				}
 			}
-		};
+		}
 		console.log('server has generated: ', generated);
 		return generated;
 	};
 
 	var server = new Server();
 	return server;
-})
+});

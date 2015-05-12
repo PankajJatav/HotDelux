@@ -31,10 +31,10 @@ define(['config/config', 'graphics', 'canvas'], function(config, graphics, view)
 			}
 			if (upper === false){
 				limit-=config.probabilities[item];
-			};
+			}
 			return limit;
 		}
 	};
 
 	return items;
-})
+});

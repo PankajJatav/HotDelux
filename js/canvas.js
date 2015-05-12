@@ -17,4 +17,4 @@ define(['config/config'], function(config){
     view.layer1.strokeStyle = '#04756f';
 
     return view;
-})
+});
