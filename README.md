@@ -1,2 +1,3 @@
 # HotDelux
-Simple slot machine gaivoronski.github.io/HotDelux
+Simple slot machine 
+http://gaivoronski.github.io/HotDelux
