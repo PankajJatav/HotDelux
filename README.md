@@ -1,3 +1,3 @@
 # HotDelux
-Simple slot machine  ef,qenfjnwej
+Simple slot machine
 http://pankajjatav.github.io/HotDelux
